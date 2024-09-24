@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+         #
+#    By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/24 12:26:30 by mabdelsa          #+#    #+#              #
-#    Updated: 2024/09/24 15:47:32 by mabdelsa         ###   ########.fr        #
+#    Updated: 2024/09/24 23:09:51 by mahmoud          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRC	=	./main.cpp RPN.cpp \
 
-NAME = main
+NAME = RPN
 RM = rm -f
 CC = c++
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98

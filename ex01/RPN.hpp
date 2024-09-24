@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPN.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:47:23 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/09/24 16:18:41 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/09/24 23:30:22 by mahmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,16 +24,16 @@
 class RPN 
 {
 	private:
-		std::stack<int> operands;
-		bool isOperator(char c);
-		void performOperation(char op);
+		std::stack<int> stack;
 
 	public:
 		RPN();
 		RPN(RPN const &copyTemplate);
 		RPN &operator=(RPN const &initTemplate);
 		~RPN();
-		int	calculate(std::string const &expression);
+		int	readArg(std::string const &expression);
+		bool isOperator(char c);
+		void calculate(char op);
 };
 
 #endif

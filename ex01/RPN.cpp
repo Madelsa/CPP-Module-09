@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   RPN.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:47:22 by mabdelsa          #+#    #+#             */
-/*   Updated: 2024/09/24 16:18:34 by mabdelsa         ###   ########.fr       */
+/*   Updated: 2024/09/24 23:30:32 by mahmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,103 +14,102 @@
 
 RPN::RPN() {}
 
-RPN::RPN(RPN const &copyTemplate) 
+RPN::RPN(RPN const &copyTemplate)
 {
-	this->operands = copyTemplate.operands;
+	this->stack = copyTemplate.stack;
 }
 
 RPN &RPN::operator=(RPN const &initTemplate)
 {
-	if ( this != &initTemplate ) 
-    {
-		this->operands = initTemplate.operands;
+	if (this != &initTemplate)
+	{
+		this->stack = initTemplate.stack;
 	}
 	return *this;
 }
 
 RPN::~RPN() {}
 
-bool isAllDigits(const std::string &str) 
+bool isAllDigits(const std::string &str)
 {
-    for (std::string::const_iterator it = str.begin(); it != str.end(); it++) 
-    {
-        if (!std::isdigit(*it)) 
-        {
-            return false;
-        }
-    }
-    return true;
-}
-
-int	RPN::calculate(std::string const &expression) 
-{
-	std::istringstream	iss(expression);
-	std::string			token;
-
-	while (iss >> token) 
-    {
-		if (token.length() == 1 && isOperator(token[0])) 
-        {
-			performOperation(token[0]);
-		} 
-        else 
-        {
-			if (!isAllDigits(token)) 
-            {
-				throw std::runtime_error("Invalid entry: " + token);
-			}
-
-			int num;
-			std::istringstream(token) >> num;	
-			if (num < 0 || num > 9)
-            {
-				throw std::runtime_error( "Invalid number: " + token );
-			}
-			operands.push(num);
+	for (std::string::const_iterator it = str.begin(); it != str.end(); it++)
+	{
+		if (!std::isdigit(*it))
+		{
+			return false;
 		}
 	}
-
-	if (operands.size() != 1) 
-    {
-		throw std::runtime_error( "Invalid expression");
-	}
-	return operands.top();
+	return true;
 }
 
-bool	RPN::isOperator(char c) 
+bool RPN::isOperator(char c)
 {
 	return c == '+' || c == '-' || c == '*' || c == '/';
 }
 
-void	RPN::performOperation(char op) 
+void RPN::calculate(char c)
 {
-	if ( this->operands.size() < 2 ) 
-    {
-		throw std::runtime_error( "Not Enough Operands for Operation" );
+	if (this->stack.size() < 2)
+	{
+		throw std::runtime_error("Not Enough Operands for Operation");
 	}
-	int b = this->operands.top();
-	this->operands.pop();
-	int a = this->operands.top();
-	this->operands.pop();
+	int b = this->stack.top();
+	this->stack.pop();
+	int a = this->stack.top();
+	this->stack.pop();
 
-	switch (op) 
-    {
-		case '+':
-			operands.push( a + b );
-			break;
-		case '-':
-			operands.push( a - b );
-			break;
-		case '*':
-			operands.push( a * b );
-			break;
-		case '/':
-			if ( b == 0 ) 
-            {
-				throw std::runtime_error("Division by Zero");
-			}
-			operands.push( a / b );
-			break;
+	if (c == '+')
+	{
+		stack.push(a + b);
+	}
+	else if (c == '-')
+	{
+		stack.push(a - b);
+	}
+	else if (c == '*')
+	{
+		stack.push(a * b);
+	}
+	else if (c == '/')
+	{
+		if (b == 0)
+		{
+			throw std::runtime_error("Denominator 0 found.");
+		}
+		stack.push(a / b);
 	}
 	return;
+}
+
+int RPN::readArg(std::string const &arg)
+{
+	std::istringstream iss(arg);
+	std::string element;
+
+	while (iss >> element)
+	{
+		if (element.length() == 1 && isOperator(element[0]))
+		{
+			calculate(element[0]);
+		}
+		else
+		{
+			if (!isAllDigits(element))
+			{
+				throw std::invalid_argument("Non-digit element found: " + element);
+			}
+			int n;
+			std::istringstream(element) >> n;
+			if (n < 0 || n > 9)
+			{
+				throw std::out_of_range("Invalid number: " + element);
+			}
+			stack.push(n);
+		}
+	}
+	if (stack.size() != 1)
+	{
+		throw std::logic_error("Expression received is invalid");
+	}
+	return stack.top();
 }

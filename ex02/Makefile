@@ -3,16 +3,16 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+         #
+#    By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/24 12:26:30 by mabdelsa          #+#    #+#              #
-#    Updated: 2024/09/18 13:36:31 by mabdelsa         ###   ########.fr        #
+#    Updated: 2024/09/25 01:40:17 by mahmoud          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRC	=	./main.cpp \
+SRC	=	./main.cpp  PmergeMe.cpp \
 
-NAME = main
+NAME = PmergeMe
 RM = rm -f
 CC = c++
 CPPFLAGS = -Wall -Wextra -Werror -std=c++98
