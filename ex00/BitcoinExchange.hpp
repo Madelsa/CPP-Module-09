@@ -3,42 +3,44 @@
 /*                                                        :::      ::::::::   */
 /*   BitcoinExchange.hpp                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lps <lps@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/19 12:24:37 by lps               #+#    #+#             */
-/*   Updated: 2024/09/19 12:24:39 by lps              ###   ########.fr       */
+/*   Created: 2024/09/24 12:09:31 by mabdelsa          #+#    #+#             */
+/*   Updated: 2024/09/24 15:16:01 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef BITCOINEXCHANGE_HPP
-#define BITCOINEXCHANGE_HPP
+# define BITCOINEXCHANGE_HPP
 
 #include <iostream>
+#include <string>
 #include <algorithm>
 #include <map>
+#include <iomanip>
 #include <fstream>
-#include <cstdlib>
 #include <sstream>
-#include <stdexcept>
+#include <ctime>
+#include <cmath>
+#include <cstdlib>
 
-class BitcoinExchange
+class BitcoinExchange 
 {
-	std::map<std::string, float> database;
-	bool isLeapYear(int year);
-	void createDatabase();
-	bool isDateValid(const std::string date);
-	void readInputFile(std::string& inputFile);
-	void compareValue(const std::string& date, float value);
-	bool isFileEmpty(const std::string& filename);
-	int countOccurrences(const std::string& str, char ch);
-	int isValueValid(std::string value);
-	BitcoinExchange();
-	public:
-		BitcoinExchange(std::string inputFile);
-		BitcoinExchange(const BitcoinExchange& other);
-		BitcoinExchange& operator=(const BitcoinExchange& rhs);
+	private:
+		std::map<std::string, double> map;
+
+	public:	
+		BitcoinExchange();
+		BitcoinExchange(BitcoinExchange const &copyTemplate);
+		BitcoinExchange &operator=(BitcoinExchange const &initTemplate);
 		~BitcoinExchange();
-		void printDatabase();
+		void	fillMap(std::string const &fileName);
+		void	readInFile(std::string const &fileName);
+		void	readLine(std::string const &line);
+		double	getExRate(std::string const &date) const;
+		bool	isValidDate(std::string const &date) const;
+		bool	isValidValue(double value) const;
+		bool	isLeapYear(int year) const;
 };
 
-#endif // !BITCOINEXCHANGE_HPP
+#endif

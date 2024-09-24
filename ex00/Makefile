@@ -3,32 +3,35 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lps <lps@student.42.fr>                    +#+  +:+       +#+         #
+#    By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/09/19 12:25:01 by lps               #+#    #+#              #
-#    Updated: 2024/09/19 12:25:03 by lps              ###   ########.fr        #
+#    Created: 2024/08/24 12:26:30 by mabdelsa          #+#    #+#              #
+#    Updated: 2024/09/24 12:40:23 by mabdelsa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+SRC	=	./main.cpp ./BitcoinExchange.cpp \
+
 NAME = btc
+RM = rm -f
+CC = c++
+CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 
-CXX = c++
-CXXFLAGS = -std=c++98 -Wall -Wextra -Werror 
-
-SRCS = main.cpp BitcoinExchange.cpp
-
-OBJS = $(SRCS:.cpp=.o)
+OBJS = $(SRC:.cpp=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS)
+	$(CC) $(CPPFLAGS) $(SRC) -o $(NAME)
+	
+%.o: %.c
+	$(CC) $(CPPFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJS)
-	
+	$(RM) $(OBJS)
+
 fclean: clean
-	rm -f $(NAME)
+	$(RM) $(NAME)
 
 re: fclean all
 

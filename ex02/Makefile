@@ -3,32 +3,35 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lps <lps@student.42.fr>                    +#+  +:+       +#+         #
+#    By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/09/20 13:11:31 by lps               #+#    #+#              #
-#    Updated: 2024/09/20 13:11:33 by lps              ###   ########.fr        #
+#    Created: 2024/08/24 12:26:30 by mabdelsa          #+#    #+#              #
+#    Updated: 2024/09/18 13:36:31 by mabdelsa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = PmergeMe
+SRC	=	./main.cpp \
 
-CXX = c++
-CXXFLAGS = -std=c++98 -Wall -Wextra -Werror 
+NAME = main
+RM = rm -f
+CC = c++
+CPPFLAGS = -Wall -Wextra -Werror -std=c++98
 
-SRCS = main.cpp PmergeMe.cpp \
-
-OBJS = $(SRCS:.cpp=.o)
+OBJS = $(SRC:.cpp=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CXX) $(CXXFLAGS) -o $(NAME) $(OBJS)
+	$(CC) $(CPPFLAGS) $(SRC) -o $(NAME)
+	
+%.o: %.c
+	$(CC) $(CPPFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJS)
-	
+	$(RM) $(OBJS)
+
 fclean: clean
-	rm -f $(NAME)
+	$(RM) $(NAME)
 
 re: fclean all
 
