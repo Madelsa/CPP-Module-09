@@ -6,11 +6,11 @@
 #    By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/24 12:26:30 by mabdelsa          #+#    #+#              #
-#    Updated: 2024/09/18 13:36:31 by mabdelsa         ###   ########.fr        #
+#    Updated: 2024/09/24 15:47:32 by mabdelsa         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRC	=	./main.cpp \
+SRC	=	./main.cpp RPN.cpp \
 
 NAME = main
 RM = rm -f
