@@ -3,170 +3,182 @@
 /*                                                        :::      ::::::::   */
 /*   PmergeMe.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 23:19:12 by mahmoud           #+#    #+#             */
-/*   Updated: 2024/09/25 01:18:26 by mahmoud          ###   ########.fr       */
+/*   Updated: 2024/09/25 09:22:45 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PMERGEME_HPP
 # define PMERGEME_HPP
 
-# include <iostream>
-# include <string>
-# include <vector>
-# include <list>
-# include <deque>
-# include <iterator>
-# include <sstream>
-# include <utility>
-# include <iomanip>
 # include <algorithm>
+# include <deque>
+# include <iomanip>
+# include <iostream>
+# include <iterator>
+# include <list>
+# include <sstream>
+# include <string>
+# include <utility>
+# include <vector>
 
 typedef std::pair<int, bool> oddEntry;
-template<typename N, typename P>
-class PmergeMe 
+template <typename N, typename P>
+class PmergeMe
 {
+  private:
+	PmergeMe();
+	PmergeMe(PmergeMe const &copyTemplate);
+	PmergeMe &operator=(PmergeMe const &initTemplate);
+	~PmergeMe();
+	static oddEntry checkOddEntry(N &numbers);
+	static P recursionMS(P &pairs);
+	static void pushLargestNums(P &pairsSorted, N &numsSorted);
+	static void insertSortSmallest(P &pairsSorted, N &sorted_num);
 
-	private:
-		PmergeMe();
-		PmergeMe(PmergeMe const &copyTemplate);
-		PmergeMe &operator=(PmergeMe const &initTemplate);
-		~PmergeMe();
-		static oddEntry	findStraggler(N &numbers);
-		static P			mergeSortSeconds(P &pairs);
-		static void			extractLargest(P &sortedPairs, N &sortedNumbers);
-		static void			insertSmallest(P &sortedPairs, N &sorted_num);
-		
-	public:
-		static N			parseNumbers(int ac, char **av);
-		static N			FJMI(N &numbers);
+  public:
+	static N readNums(int ac, char **av);
+	static N fordJ(N &numbers);
 };
 
-template<typename N, typename P>
-N	PmergeMe<N, P>::parseNumbers(int ac, char **av) 
+template <typename N, typename P>
+N PmergeMe<N, P>::readNums(int ac, char **av)
 {
-
 	N	numbers;
-	int	n = -1;
+	int	n;
 
-	for (int i = 1; i < ac; i++) 
+	n = -1;
+	for (int i = 1; i < ac; i++)
 	{
-		std::istringstream	iss((std::string(av[i])));
-		
+		std::istringstream iss((std::string(av[i])));
 		iss >> n;
-		if (iss.fail() || !iss.eof() || n < 0) 
+		if (iss.fail() || !iss.eof() || n < 0)
 		{
-			throw std::invalid_argument("Error: Invalid Input.");
-		} 
-		else 
+			throw std::runtime_error("Error: Invalid Input.");
+		}
+		else
 		{
 			numbers.push_back(n);
 		}
 	}
-	return numbers;
+	return (numbers);
 }
 
-template<typename N, typename P>
-N PmergeMe<N, P>::FJMI(N &numbers) 
+template <typename N, typename P>
+N PmergeMe<N, P>::fordJ(N &numbers)
 {
-	oddEntry remainingNum = findStraggler(numbers);
+	oddEntry	remainingNum;
+	int			first;
+	int			second;
 
-	P	pairs(0);
-	P	sortedPairs(0);
-	N	sortedNumbers(0);
-
-	while (!numbers.empty() && numbers.size() > 1) 
+	remainingNum = checkOddEntry(numbers);
+	P pairs(0);
+	P pairsSorted(0);
+	N numsSorted(0);
+	while (!numbers.empty() && numbers.size() > 1)
 	{
-		int first = numbers.front();
+		first = numbers.front();
 		numbers.erase(numbers.begin());
-		int second = numbers.front();
-		numbers.erase( numbers.begin() );
-		if (first > second) 
+		second = numbers.front();
+		numbers.erase(numbers.begin());
+		if (first > second)
 		{
 			std::swap(first, second);
 		}
 		pairs.push_back(std::make_pair(first, second));
 	}
-	if (!pairs.empty()) 
+	if (!pairs.empty())
 	{
-		sortedPairs = mergeSortSeconds(pairs);
-		extractLargest( sortedPairs, sortedNumbers );
-		insertSmallest( sortedPairs, sortedNumbers );
+		pairsSorted = recursionMS(pairs);
+		pushLargestNums(pairsSorted, numsSorted);
+		insertSortSmallest(pairsSorted, numsSorted);
 	}
-	if (remainingNum.second) 
+	if (remainingNum.second)
 	{
-		typename N::iterator insertPos = std::lower_bound( sortedNumbers.begin(), sortedNumbers.end(), remainingNum.first );
-		sortedNumbers.insert( insertPos, remainingNum.first );
+		typename N::iterator insertPos = std::lower_bound(numsSorted.begin(),
+															numsSorted.end(),
+															remainingNum.first);
+		numsSorted.insert(insertPos, remainingNum.first);
 	}
-	return sortedNumbers;
+	return (numsSorted);
 }
 
-template<typename N, typename P>
-oddEntry	PmergeMe<N, P>::findStraggler(N &numbers) 
+template <typename N, typename P>
+oddEntry PmergeMe<N, P>::checkOddEntry(N &numbers)
 {
-	oddEntry	remainingNum = std::make_pair(0, false);
+	oddEntry	remainingNum;
 
-	if (((numbers.size()) % 2 != 0)) 
+	remainingNum = std::make_pair(0, false);
+	if (((numbers.size()) % 2 != 0))
 	{
 		remainingNum.first = numbers.back();
 		remainingNum.second = true;
 		numbers.pop_back();
 	}
-	return remainingNum;
+	return (remainingNum);
 }
 
-bool	compSec( std::pair<int, int> const &l, std::pair<int, int> const &r ) {
-
-	return l.second < r.second;
+bool	compareOperation(std::pair<int, int> const &left, std::pair<int,
+		int> const &right)
+{
+	return (left.second < right.second);
 }
 
-template<typename N, typename P>
-P			PmergeMe<N, P>::mergeSortSeconds( P &pairs ) {
+template <typename N, typename P>
+P PmergeMe<N, P>::recursionMS(P &pairs)
+{
+	size_t	mid;
 
-	P	sortedPairs(0);
-
-	if (pairs.size() == 1) 
+	P pairsSorted(0);
+	if (pairs.size() == 1)
 	{
-		return pairs;
+		return (pairs);
 	}
-	typename	P::iterator mid_it = pairs.begin();
-	size_t	mid = pairs.size() / 2;
-	std::advance( mid_it, mid );
-
-	P	left( pairs.begin(), mid_it );
-	P	right( mid_it, pairs.end() );
-
-	left = mergeSortSeconds(left);
-	right = mergeSortSeconds(right);
-
-	std::merge(left.begin(), left.end(), right.begin(), right.end(),
-		std::back_inserter(sortedPairs), compSec);
-	return sortedPairs;
-}	
-
-template<typename N, typename P>
-void			PmergeMe<N, P>::extractLargest( P &sortedPairs, N &sortedNumbers ) {
-
-
-	for ( typename P::iterator it = sortedPairs.begin(); it != sortedPairs.end(); it++ ) {
-		
-		sortedNumbers.push_back( it->second );
-	}
-
-	return;
+	typename P::iterator it = pairs.begin();
+	mid = pairs.size() / 2;
+	std::advance(it, mid);
+	P leftPart(pairs.begin(), it);
+	P rightPart(it, pairs.end());
+	leftPart = recursionMS(leftPart);
+	rightPart = recursionMS(rightPart);
+	std::merge(leftPart.begin(), leftPart.end(), rightPart.begin(),
+			rightPart.end(), std::back_inserter(pairsSorted), compareOperation);
+	return (pairsSorted);
 }
 
-template<typename N, typename P>
-void		PmergeMe<N, P>::insertSmallest( P &sortedPairs, N &sortedNumbers ) {
-
-	for (typename P::iterator it = sortedPairs.begin(); it != sortedPairs.end(); it++) {
-
-		typename	N::iterator insertPos = std::lower_bound( sortedNumbers.begin(), sortedNumbers.end(), it->first );
-		sortedNumbers.insert(insertPos, it->first);
+template <typename N, typename P>
+void PmergeMe<N, P>::pushLargestNums(P &pairsSorted, N &numsSorted)
+{
+	for (typename P::iterator it = pairsSorted.begin(); it != pairsSorted.end(); it++)
+	{
+		numsSorted.push_back(it->second);
 	}
-	return;
+	return ;
+}
+
+template <typename N, typename P>
+void PmergeMe<N, P>::insertSortSmallest(P &pairsSorted, N &numsSorted)
+{
+	for (typename P::iterator it = pairsSorted.begin(); it != pairsSorted.end(); it++)
+	{
+		typename N::iterator insertPos = std::lower_bound(numsSorted.begin(),
+				numsSorted.end(), it->first);
+		numsSorted.insert(insertPos, it->first);
+	}
+	return ;
+}
+
+template <typename T>
+void	print(T &con)
+{
+	for (typename T::iterator it = con.begin(); it != con.end(); it++)
+	{
+		std::cout << *it << " ";
+	}
+	std::cout << std::endl;
+	return ;
 }
 
 #endif

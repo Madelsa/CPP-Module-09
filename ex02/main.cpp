@@ -3,62 +3,57 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mahmoud <mahmoud@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mabdelsa <mabdelsa@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 23:19:13 by mahmoud           #+#    #+#             */
-/*   Updated: 2024/09/25 00:26:57 by mahmoud          ###   ########.fr       */
+/*   Updated: 2024/09/25 09:21:22 by mabdelsa         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
 
-template<typename T>
-void print_container(T &con) 
+int	main(int ac, char **av)
 {
-	for (typename T::iterator it = con.begin(); it != con.end(); it++) 
+	clock_t	listStartTime;
+	clock_t	listEndTime;
+	double	listTimeToSort;
+	clock_t	vectorStartTime;
+	clock_t	vectorEndTime;
+	double	vectorTimeToSort;
+
+	if (ac < 2)
 	{
-		std::cout << *it << " ";
-	}
-	std::cout << std::endl;
-	return;
-}
-
-int main( int ac, char **av ) 
-{
-
-	if ( ac < 2 ) {
 		std::cout << "Invalid input format" << std::endl;
 		return -1;
 	}
-
-	try {
-		clock_t list_start_time = clock();
-		std::list<int> numbers_list = PmergeMe<std::list<int>, std::list<std::pair<int, int> > >::parseNumbers(ac, av);
-		std::list<int> list_cpy = numbers_list;
-		std::list<int> sorted_list = PmergeMe<std::list<int>, std::list<std::pair<int, int> > >::FJMI(numbers_list);
-		clock_t list_end_time = clock() - list_start_time;
-		double list_sort_time = list_end_time / (double) CLOCKS_PER_SEC * 1e3;
-
-		clock_t vector_start_time = clock();
-		std::vector<int> numbers_vector = PmergeMe<std::vector<int>, std::vector<std::pair<int, int> > >::parseNumbers( ac, av );
-		std::vector<int> sorted_vector = PmergeMe<std::vector<int>, std::vector<std::pair<int, int> > >::FJMI( numbers_vector );
-		clock_t vector_end_time = clock() - vector_start_time;
-		double vector_sort_time = vector_end_time / (double) CLOCKS_PER_SEC * 1e3;
-
+	try
+	{
+		listStartTime = clock();
+		std::list<int> numsList = PmergeMe<std::list<int>,
+			std::list<std::pair<int, int> > >::readNums(ac, av);
+		std::list<int> beforeSorting = numsList;
+		std::list<int> afterSorting = PmergeMe<std::list<int>,
+			std::list<std::pair<int, int> > >::fordJ(numsList);
+		listEndTime = clock() - listStartTime;
+		listTimeToSort = listEndTime / (double)CLOCKS_PER_SEC * 1000;
+		vectorStartTime = clock();
+		std::vector<int> numbers_vector = PmergeMe<std::vector<int>,
+		std::vector<std::pair<int, int> > >::readNums(ac, av);
+		std::vector<int> sorted_vector = PmergeMe<std::vector<int>,
+		std::vector<std::pair<int, int> > >::fordJ(numbers_vector);
+		vectorEndTime = clock() - vectorStartTime;
+		vectorTimeToSort = vectorEndTime / (double)CLOCKS_PER_SEC * 1000;
+		
 		std::cout << "Before: ";
-		print_container( list_cpy );
+		print(beforeSorting);
 		std::cout << "After: ";
-		print_container( sorted_list );
-
+		print(afterSorting);
 		std::cout << std::fixed << std::setprecision(5);
-		std::cout << "Time to process a range of " << list_cpy.size() << " elements with std::list : " << list_sort_time << " ms" << std::endl;
-
-		std::cout << "Time to process a range of " << list_cpy.size() << " elements with std::vector : " << vector_sort_time << " ms" << std::endl;
-	} catch( std::runtime_error const &e ) {
-		std::cout << e.what() << std::endl;
-		return -2;
+		std::cout << "Time to sort " << beforeSorting.size() << " elements with std::list : " << listTimeToSort << " ms" << std::endl;
+		std::cout << "Time to sort " << beforeSorting.size() << " elements with std::vector : " << vectorTimeToSort << " ms" << std::endl;
 	}
-
-	return 0;
+	catch (std::runtime_error const &e)
+	{
+		std::cout << e.what() << std::endl;
+	}
 }
-
